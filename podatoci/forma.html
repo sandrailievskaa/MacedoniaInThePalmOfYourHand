@@ -1,58 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mk">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Chat со OpenAI API</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        #chat-container {
+            width: 350px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        #chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        #chat-input {
+            width: 80%;
+            padding: 5px;
+        }
+        #send {
+            width: 18%;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-  <input id="chat-input" type="text">
-  <button id="send">></button>
-<script>
 
+<!-- Chat дел -->
+<div id="chat-container" style="display:block;">
+    <div id="chat-messages"></div>
+    <input id="chat-input" type="text" placeholder="Напиши порака..." autocomplete="off"/>
+    <button id="send">Прати</button>
+</div>
 
+<script src="script.js"></script>
 
-  $(document).ready(function() {
-
-
-
-    $("#send").click(function () {
-      console.log("POVIK")
-        sendMessageToChatGPT($("#chat-input").val())
-    })
-
-
-    function sendMessageToChatGPT(message) {
-      console.log(message)
-      $.ajax({
-        url: 'https://api.openai.com/v1/chat/completions',
-        type: 'POST',
-        contentType: 'application/json',
-        headers: {
-            'Authorization': 'Bearer YOUR_API_KEY_HERE',
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify({
-          model: "gpt-3",
-          messages: [{"role": "user", "content": message}]
-        }),
-        success: function(response) {
-          console.log(response)
-          var gptMessage = response.choices[0].message.content;
-          $('#chat-messages').append('<div><strong>ChatGPT:</strong> ' + gptMessage + '</div>');
-        },
-        error: function(xhr, status, error) {
-          console.error('Error:', status, error);
-          var errorMessage = JSON.parse(xhr.responseText).error.message;
-          console.log('Error message:', errorMessage);
-          $('#chat-messages').append('<div><strong>ChatGPT:</strong> Error communicating with the server.</div>');
-        }
-      });
-    }
-  });
-
-
-
-</script>
 </body>
 </html>
