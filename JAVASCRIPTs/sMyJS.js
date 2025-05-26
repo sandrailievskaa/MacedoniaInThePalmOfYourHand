@@ -1,68 +1,74 @@
-// Код за навигација со hover (од твојот оригинален код)
 document.addEventListener("DOMContentLoaded", function(){
     if (window.innerWidth > 992) {
+
         document.querySelectorAll('.navbar .nav-item').forEach(function(everyitem){
+
             everyitem.addEventListener('mouseover', function(e){
+
                 let el_link = this.querySelector('a[data-bs-toggle]');
+
                 if(el_link != null){
                     let nextEl = el_link.nextElementSibling;
                     el_link.classList.add('show');
-                    if(nextEl) nextEl.classList.add('show');
+                    nextEl.classList.add('show');
                 }
+
             });
             everyitem.addEventListener('mouseleave', function(e){
                 let el_link = this.querySelector('a[data-bs-toggle]');
+
                 if(el_link != null){
                     let nextEl = el_link.nextElementSibling;
                     el_link.classList.remove('show');
-                    if(nextEl) nextEl.classList.remove('show');
+                    nextEl.classList.remove('show');
                 }
+
+
             })
         });
+
     }
 });
 
+
 $(document).ready(function() {
+    $('#avatar').click(function() {
+        $('#chat-container').toggle();
+    });
 
-    // Функција за праќање порака до OpenAI API
+
+    $('#chat-input').keypress(function(e) {
+        console.log("povik")
+        if (e.which == 13) {
+            var userMessage = $(this).val();
+            $(this).val('');
+            $('#chat-messages').append('<div><strong>Ти:</strong> ' + userMessage + '</div>');
+            sendMessageToChatGPT(userMessage);
+        }
+    });
+
+
     function sendMessageToChatGPT(message) {
-        if (!message.trim()) return; // не праќај празна порака
-
-        $('#chat-messages').append('<div><strong>Ти:</strong> ' + $('<div>').text(message).html() + '</div>');
-        $('#chat-input').val(''); // исчисти полето
-
         $.ajax({
             url: 'https://api.openai.com/v1/chat/completions',
             type: 'POST',
             headers: {
-                'Authorization': 'Bearer YOUR_API_KEY_HERE',  // <-- Замени го со твојот API клуч
+                'Authorization': 'Bearer YOUR_API_KEY_HERE',
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({
                 model: "gpt-4",
-                messages: [{ role: "user", content: message }]
+                messages: [{"role": "user", "content": message}]
             }),
             success: function(response) {
                 var gptMessage = response.choices[0].message.content;
-                $('#chat-messages').append('<div><strong>ChatGPT:</strong> ' + $('<div>').text(gptMessage).html() + '</div>');
-                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight); // скрол до дното
+                $('#chat-messages').append('<div><strong>ChatGPT:</strong> ' + gptMessage + '</div>');
             },
-            error: function(xhr, status, error) {
+            error: function() {
                 $('#chat-messages').append('<div><strong>ChatGPT:</strong> Грешка при комуникација со серверот.</div>');
             }
         });
     }
-
-    // Клик на копчето "Прати"
-    $('#send').click(function () {
-        var msg = $('#chat-input').val();
-        sendMessageToChatGPT(msg);
-    });
-
-    // Испрати порака со Enter
-    $('#chat-input').keypress(function(e) {
-        if (e.which == 13) {
-            $('#send').click();
-        }
-    });
 });
+
+
