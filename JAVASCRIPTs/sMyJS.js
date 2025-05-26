@@ -53,7 +53,7 @@ $(document).ready(function() {
             url: 'https://api.openai.com/v1/chat/completions',
             type: 'POST',
             headers: {
-                'Authorization': 'Bearer sk-proj-YL2gLZkSJVYoLyqs6oigT3BlbkFJR12MMR2CmU7OyknHFPWM',
+                'Authorization': 'Bearer YOUR_API_KEY_HERE',
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({
